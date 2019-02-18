@@ -19,13 +19,12 @@ import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.context.annotation.ComponentScan;
-
-
-
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @SuppressWarnings("serial")
 @Entity
 public class Note implements Serializable {
+
 	@Id
 	@GeneratedValue
 	@Column(name = "noteId")
@@ -54,70 +53,80 @@ public class Note implements Serializable {
 	@Column(name = "inTrash")
 	private boolean inTrash;
 
-	@ManyToOne	
-	@JoinColumn(name = "userId", nullable = false)
-	private UserDetails userId;
+	@Column(name = "userId")
+	private int userId;
+
 	
-	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Label.class, cascade = { CascadeType.ALL })
-    @JoinTable(name = "Note_Label", joinColumns = { @JoinColumn(name = "noteId") }, inverseJoinColumns = {
-            @JoinColumn(name = "labelId") })
-    
-	private List<Label> labels;
+	 @ManyToMany(fetch = FetchType.EAGER, targetEntity = Label.class, cascade = {
+	 CascadeType.ALL })
+	 @JoinTable(name = "Note_Label", joinColumns = { @JoinColumn(name = "noteId")
+	 }, inverseJoinColumns = {
+	 @JoinColumn(name = "labelId") })
 
-	public UserDetails getUserId() {
-		return userId;
-	}
-
-	public void setUserId(UserDetails userId) {
-		this.userId = userId;
-	}
+	 private List<Label> labels;
+	
+	
 
 	public int getNoteId() {
 		return noteId;
 	}
 
-	public void setNoteId(int noteId) {
+	public Note setNoteId(int noteId) {
 		this.noteId = noteId;
+		return this;
 	}
 
-	public List<Label> getLabels() {
-		return labels;
-	}
-
-	public void setLabels(List<Label> labels) {
-		this.labels = labels;
-	}
+	 public List<Label> getLabels() {
+	 return labels;
+	 }
+	
+	 public void setLabels(List<Label> labels) {
+	 this.labels = labels;
+	 }
 
 	public String getTitle() {
 		return title;
 	}
 
-	public void setTitle(String title) {
+	public Note setTitle(String title) {
 		this.title = title;
+		return this;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDiscription(String discription) {
-		this.description = discription;
+	public Note setDescription(String description) {
+		this.description = description;
+		return this;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public Note setUserId(int userId) {
+		this.userId = userId;
+		return this;
 	}
 
 	public boolean isArchive() {
 		return isArchive;
 	}
 
-	public void setArchive(boolean isArchive) {
+	public Note setArchive(boolean isArchive) {
 		this.isArchive = isArchive;
+		return this;
 	}
 
 	public boolean isPinned() {
 		return isPinned;
 	}
 
-	public void setPinned(boolean isPinned) {
+	public Note setPinned(boolean isPinned) {
 		this.isPinned = isPinned;
+		return this;
 	}
 
 	public boolean isInTrash() {
@@ -132,25 +141,25 @@ public class Note implements Serializable {
 		return createdTime;
 	}
 
-	public void setCreatedTime(Timestamp createdTime) {
+	public Note setCreatedTime(Timestamp createdTime) {
 		this.createdTime = createdTime;
+		return this;
 	}
 
 	public Timestamp getUpdatedTime() {
 		return updatedTime;
 	}
 
-	public void setUpdatedTime(Timestamp updatedTime) {
+	public Note setUpdatedTime(Timestamp updatedTime) {
 		this.updatedTime = updatedTime;
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		return "Note [noteId=" + noteId + ", title=" + title + ", discription=" + description + ", createdTime="
+		return "Note [noteId=" + noteId + ", title=" + title + ", description=" + description + ", createdTime="
 				+ createdTime + ", updatedTime=" + updatedTime + ", isArchive=" + isArchive + ", isPinned=" + isPinned
-				+ ", inTrash=" + inTrash + ", userId=" + userId + ", labels=" + labels + "]";
+				+ ", inTrash=" + inTrash + ", userId=" + userId + "]";
 	}
-
-	
 
 }

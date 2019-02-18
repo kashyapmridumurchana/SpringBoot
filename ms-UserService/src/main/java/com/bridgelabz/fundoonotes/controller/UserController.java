@@ -37,7 +37,7 @@ public class UserController
 
 			UserDetails newUser = userService.register(user,request);
 			if (newUser != null) {
-				return new ResponseEntity<UserDetails>(newUser, HttpStatus.FOUND);
+				return new ResponseEntity<UserDetails>(newUser, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<String>("Not created", HttpStatus.NOT_FOUND);
 			}
@@ -49,7 +49,7 @@ public class UserController
 
 	        UserDetails user = userService.activateUser(token, request);
 	        if (user != null) {
-	            return new ResponseEntity<String>("Activated", HttpStatus.FOUND);
+	            return new ResponseEntity<String>("Activated", HttpStatus.OK);
 	        } else {
 	            return new ResponseEntity<String>("Email incorrect. Please enter valid email address present in database",
 	                    HttpStatus.NOT_FOUND);
@@ -77,7 +77,7 @@ public class UserController
 
 			UserDetails newUser = userService.update(token, user, request);
 			if (newUser != null) {
-				return new ResponseEntity<UserDetails>(newUser, HttpStatus.FOUND);
+				return new ResponseEntity<UserDetails>(newUser, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<String>("Email incorrect. Please enter valid email address present in database",
 						HttpStatus.NOT_FOUND);
@@ -89,7 +89,7 @@ public class UserController
 	 public ResponseEntity<?> delete(@RequestHeader("token") String token, HttpServletRequest request) {
 
 			if (userService.delete(token, request)) {
-				return new ResponseEntity<UserDetails>(HttpStatus.FOUND);
+				return new ResponseEntity<UserDetails>(HttpStatus.OK);
 			} else {
 				return new ResponseEntity<String>("Email incorrect. Please enter valid email address present in database",
 						HttpStatus.NOT_FOUND);
@@ -100,7 +100,7 @@ public class UserController
 		public ResponseEntity<?> forgotpassword(@RequestParam("emailId") String emailId, HttpServletRequest request) {
 			if (userService.forgotPassword(emailId, request)) {
 				return new ResponseEntity<String>("Link sent to your emailId reset your password",
-						HttpStatus.FOUND);
+						HttpStatus.OK);
 			} else {
 				return new ResponseEntity<String>("Email incorrect. Please enter valid email address present in database",
 						HttpStatus.NOT_FOUND);
@@ -112,7 +112,7 @@ public class UserController
 				HttpServletRequest request) {
 			UserDetails newUser = userService.resetPassword(user, token, request);
 			if (newUser != null) {
-				return new ResponseEntity<String>("Password reset", HttpStatus.FOUND);
+				return new ResponseEntity<String>("Password reset", HttpStatus.OK);
 			} else {
 				return new ResponseEntity<String>("password couldn't be reset", HttpStatus.NOT_FOUND);
 			}
