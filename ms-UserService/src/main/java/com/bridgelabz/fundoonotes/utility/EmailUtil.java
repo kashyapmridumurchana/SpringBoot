@@ -16,8 +16,8 @@ public class EmailUtil {
 	public void sendEmail(String toEmail, String subject, String activationUrl) {
 		try {
 			SimpleMailMessage msg = new SimpleMailMessage();
-			msg.setFrom("kashyapmridumurchana25@gmail.com");
-			msg.setTo("kashyapmridumurchana25@gmail.com");
+			msg.setFrom("mridumurchanakashyap49@gmail.com");
+			msg.setTo("mridumurchanakashyap49@gmail.com");
 			String message = "Please click on the link to verify \n\n" + activationUrl;
 			msg.setText(message);
 			msg.setSentDate(new Date());
