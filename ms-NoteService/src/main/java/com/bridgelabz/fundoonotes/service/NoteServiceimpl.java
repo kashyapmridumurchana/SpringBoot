@@ -41,24 +41,39 @@ public class NoteServiceimpl implements NoteService {
 		return note;
 	}
 
+	
 	@Override
-	public Note updateNote(String token, int noteId, Note note, HttpServletRequest request) {
-		int userId = tokenGenerator.verifyToken(token);
-		Optional<Note> optional = noteRepository.findById(noteId);
-		if (optional.isPresent()) {
-			Note newNote = optional.get();
-			if (newNote != null && (newNote.getUserId() == userId)) {
-				newNote.setTitle(note.getTitle());
-				newNote.setDescription(note.getDescription());
-				newNote.setArchive(note.isArchive());
-				newNote.setPinned(note.isPinned());
-				newNote.setInTrash(note.isInTrash());
-				noteRepository.save(newNote);
-				return newNote;
-			}
-		}
-		return null;
-	}
+    public Note updateNote(String token, int noteId, Note note, HttpServletRequest request) {
+        Note newNote=null;
+        int userId = tokenGenerator.verifyToken(token);
+        List<Note> notes= noteRepository.findAllByUserId(userId);
+        if(!notes.isEmpty())
+        {
+            newNote=notes.stream().filter(existingNote -> existingNote.getNoteId() == noteId).findAny().get();
+            Note updatedNote = newNoteUpdate(newNote, note);
+            noteRepository.save(updatedNote);
+            return updatedNote;
+        }
+        return null;
+
+    }
+
+    public Note newNoteUpdate(Note newNote, Note note) {
+        if (note.getTitle() != null)
+            newNote.setTitle(note.getTitle());
+        if (note.getDescription() != null)
+            newNote.setDescription(note.getDescription());
+        if (note.isArchive() != false)
+            newNote.setArchive(note.isArchive());
+        if (note.isPinned() != false)
+            newNote.setPinned(note.isPinned());
+        if (note.isInTrash() != false)
+            newNote.setInTrash(note.isInTrash());
+        return newNote;
+    }
+	
+	
+
 
 	public Note deleteNote(String token, int noteId, HttpServletRequest request) {
 		int userId = tokenGenerator.verifyToken(token);
