@@ -4,8 +4,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.bridgelabz.fundoonotes.controller.NoteController;
 import com.bridgelabz.fundoonotes.dao.LabelRepository;
 import com.bridgelabz.fundoonotes.dao.NoteRepository;
 import com.bridgelabz.fundoonotes.model.Label;
@@ -15,6 +20,9 @@ import com.bridgelabz.fundoonotes.utility.TokenGenerator;
 @Service
 public class NoteServiceimpl implements NoteService {
 
+	  private static Logger logger = LoggerFactory.getLogger(NoteServiceimpl.class);
+
+	
 	@Autowired
 	private NoteRepository noteRepository;
 

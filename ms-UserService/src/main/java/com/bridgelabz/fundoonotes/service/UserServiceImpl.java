@@ -3,18 +3,22 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.bridgelabz.fundoonotes.model.UserDetails;
 import com.bridgelabz.fundoonotes.utility.EmailUtil;
 import com.bridgelabz.fundoonotes.utility.TokenGenerator;
+import com.bridgelabz.fundoonotes.controller.UserController;
 import com.bridgelabz.fundoonotes.dao.UserDetailsRepository;
 
 
 @Service
 public class UserServiceImpl implements UserService
 {
+    private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
 	@Autowired
     private UserDetailsRepository userDetailsRepository;
