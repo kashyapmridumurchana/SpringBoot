@@ -1,4 +1,5 @@
 package com.bridgelabz.fundoonotes.service;
+
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,35 +15,32 @@ import com.bridgelabz.fundoonotes.utility.TokenGenerator;
 import com.bridgelabz.fundoonotes.controller.UserController;
 import com.bridgelabz.fundoonotes.dao.UserDetailsRepository;
 
-
 @Service
-public class UserServiceImpl implements UserService
-{
-    private static Logger logger = LoggerFactory.getLogger(UserService.class);
+public class UserServiceImpl implements UserService {
+	private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	@Autowired
-    private UserDetailsRepository userDetailsRepository;
-	
+	private UserDetailsRepository userDetailsRepository;
+
 	@Autowired
 	private TokenGenerator tokenGenerator;
-	
+
 	@Autowired
 	private PasswordEncoder bcryptEncoder;
-	
+
 	@Autowired
 	private EmailUtil emailUtil;
-	
+
 	@Override
-	public UserDetails register(UserDetails user,HttpServletRequest request) {
-	
+	public UserDetails register(UserDetails user, HttpServletRequest request) {
+
 		user.setPassword(bcryptEncoder.encode(user.getPassword()));
-		UserDetails newUser=userDetailsRepository.save(user);
-		if(newUser==null)
-		{
+		UserDetails newUser = userDetailsRepository.save(user);
+		if (newUser == null) {
 			return null;
 		}
 		String token = tokenGenerator.generateToken(String.valueOf(newUser.getId()));
-		System.out.println("token is"+token);
+		System.out.println("token is" + token);
 		StringBuffer requestUrl = request.getRequestURL();
 		String activationUrl = requestUrl.substring(0, requestUrl.lastIndexOf("/"));
 		activationUrl = activationUrl + "/activationstatus/" + token;
@@ -50,65 +48,78 @@ public class UserServiceImpl implements UserService
 		return userDetailsRepository.save(newUser);
 	}
 
-	
 	@Override
-    public UserDetails activateUser(String token, HttpServletRequest request) {
-        int id = tokenGenerator.verifyToken(token);
-        Optional<UserDetails> optional = userDetailsRepository.findById(id);
-        return optional.map(user -> userDetailsRepository.save(user.setActivationStatus(true))).orElseGet(() -> null);
-    }
+	public UserDetails activateUser(String token, HttpServletRequest request) {
+		int id = tokenGenerator.verifyToken(token);
+		Optional<UserDetails> optional = userDetailsRepository.findById(id);
+		return optional.map(user -> userDetailsRepository.save(user.setActivationStatus(true))).orElseGet(() -> null);
+	}
 
-
-	
 	@Override
-	public UserDetails login(UserDetails user, HttpServletRequest request, HttpServletResponse response) {
-		UserDetails verifyUser = userDetailsRepository.findAllByEmailId(user.getEmailId());
-		if (bcryptEncoder.matches(user.getPassword(), verifyUser.getPassword()) && verifyUser.isActivationStatus()) {
-			String token = tokenGenerator.generateToken(String.valueOf(verifyUser.getId()));
-			response.setHeader("token", token);
-			return verifyUser;
+	public String login(UserDetails user) {
+		UserDetails existingUser = userDetailsRepository.findAllByEmailId(user.getEmailId());
+		logger.debug("user", existingUser);
+		String token = null;
+		boolean isMatch;
+		if (existingUser != null) {
+			isMatch = bcryptEncoder.matches(user.getPassword(), existingUser.getPassword());
+			if (isMatch && existingUser.isActivationStatus()) {
+				token = tokenGenerator.generateToken(String.valueOf(existingUser.getId()));
+			}
 		}
-		return null;
+		return token;
 	}
 	
 	
+	
+//	@Override
+//	public String login(UserDetails user, HttpServletRequest request, HttpServletResponse response) {
+//		UserDetails verifyUser = userDetailsRepository.findAllByEmailId(user.getEmailId());
+//		if (bcryptEncoder.matches(user.getPassword(), verifyUser.getPassword()) && verifyUser.isActivationStatus())
+//		{
+//			String token = tokenGenerator.generateToken(String.valueOf(verifyUser.getId()));
+//			return token;
+//		}
+//		return null;
+//	}
+
 	@Override
 	public Optional<UserDetails> getUser(int id) {
-		
+
 		return userDetailsRepository.findById(id);
 	}
-	
-	
+
 	@Override
-	public UserDetails update(String token,UserDetails user,HttpServletRequest request) {
+	public UserDetails update(String token, UserDetails user, HttpServletRequest request) {
 		int userId = tokenGenerator.verifyToken(token);
 		Optional<UserDetails> optional = userDetailsRepository.findById(userId);
-		if (optional.isPresent()) {
-			UserDetails newUser=optional.get();
-			newUser.setMobileNumber(user.getMobileNumber());
-			newUser.setName(user.getName());
-			newUser.setEmailId(user.getEmailId());
-			newUser.setPassword(user.getPassword());
-			newUser.setPassword(bcryptEncoder.encode(newUser.getPassword()));
-			userDetailsRepository.save(newUser);
-			return newUser;
-		}
-		return null;
+		return optional.map(newUser -> userDetailsRepository.save(newUser.setEmailId(user.getEmailId())
+				.setMobileNumber(user.getMobileNumber()).setName(user.getName()).setPassword(user.getPassword())))
+				.orElseGet(() -> null);
+		// if (optional.isPresent()) {
+		// UserDetails newUser=optional.get();
+		// newUser.setMobileNumber(user.getMobileNumber());
+		// newUser.setName(user.getName());
+		// newUser.setEmailId(user.getEmailId());
+		// newUser.setPassword(user.getPassword());
+		// newUser.setPassword(bcryptEncoder.encode(newUser.getPassword()));
+		// userDetailsRepository.save(newUser);
+		// return newUser;
+		// }
+		// return null;
 	}
-
 
 	@Override
 	public boolean delete(String token, HttpServletRequest request) {
-			int userId = tokenGenerator.verifyToken(token);
-			Optional<UserDetails> optional = userDetailsRepository.findById(userId);
-			if (optional.isPresent()) {
-				UserDetails newUser=optional.get();
-				userDetailsRepository.delete(newUser);
-				return true;
-			}
-			return false;
+		int userId = tokenGenerator.verifyToken(token);
+		Optional<UserDetails> optional = userDetailsRepository.findById(userId);
+		if (optional.isPresent()) {
+			UserDetails newUser = optional.get();
+			userDetailsRepository.delete(newUser);
+			return true;
 		}
-
+		return false;
+	}
 
 	@Override
 	public boolean forgotPassword(String emailId, HttpServletRequest request) {
@@ -124,26 +135,17 @@ public class UserServiceImpl implements UserService
 		return false;
 	}
 
-
 	@Override
 	public UserDetails resetPassword(UserDetails user, String token, HttpServletRequest request) {
 		int id = tokenGenerator.verifyToken(token);
 		Optional<UserDetails> optional = userDetailsRepository.findById(id);
-		if (optional.isPresent()) 
-		{
-			UserDetails user1=optional.get();
+		if (optional.isPresent()) {
+			UserDetails user1 = optional.get();
 			user1.setPassword(bcryptEncoder.encode(user1.getPassword()));
 			userDetailsRepository.save(user1);
 			return user1;
 		}
 		return null;
 	}
-	
-	
-	}
 
-
-	
-
-
-
+}

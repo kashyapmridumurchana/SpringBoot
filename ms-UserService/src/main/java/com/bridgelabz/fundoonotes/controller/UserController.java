@@ -86,10 +86,10 @@ public class UserController
 	 @PostMapping(value = "login")
 		public ResponseEntity<?> loginUser(@RequestBody UserDetails user, HttpServletRequest request,
 				HttpServletResponse response) {
-
-			UserDetails newUser = userService.login(user, request, response);
-			if (newUser != null) {
-				return new ResponseEntity<UserDetails>(newUser, HttpStatus.FOUND);
+			String token = userService.login(user);
+			if (token != null) {
+				response.setHeader("token", token);
+				return new ResponseEntity<Void>(HttpStatus.OK);
 			} else {
 				return new ResponseEntity<String>("Incorrect emailId or password", HttpStatus.NOT_FOUND);
 			}

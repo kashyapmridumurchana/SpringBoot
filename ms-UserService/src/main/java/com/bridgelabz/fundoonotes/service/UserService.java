@@ -11,7 +11,7 @@ public interface UserService {
 
 	UserDetails register(UserDetails user,HttpServletRequest request);
 	
-	UserDetails login(UserDetails user,HttpServletRequest request,HttpServletResponse response);
+	//String login(UserDetails user,HttpServletRequest request,HttpServletResponse response);
 
 	Optional<UserDetails> getUser(int id);
 	
@@ -25,5 +25,7 @@ public interface UserService {
 
 	boolean forgotPassword(String emailId, HttpServletRequest request);
 
-	UserDetails resetPassword(UserDetails user, String token, HttpServletRequest request);   
+	UserDetails resetPassword(UserDetails user, String token, HttpServletRequest request);
+
+	String login(UserDetails user);   
 }
