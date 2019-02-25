@@ -2,8 +2,6 @@ package com.bridgelabz.fundoonotes.service;
 
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.bridgelabz.fundoonotes.model.UserDetails;
 import com.bridgelabz.fundoonotes.utility.EmailUtil;
 import com.bridgelabz.fundoonotes.utility.TokenGenerator;
-import com.bridgelabz.fundoonotes.controller.UserController;
 import com.bridgelabz.fundoonotes.dao.UserDetailsRepository;
 
 @Service
@@ -39,15 +36,18 @@ public class UserServiceImpl implements UserService {
 		if (newUser == null) {
 			return null;
 		}
-		String token = tokenGenerator.generateToken(String.valueOf(newUser.getId()));
-		System.out.println("token is" + token);
-		StringBuffer requestUrl = request.getRequestURL();
-		String activationUrl = requestUrl.substring(0, requestUrl.lastIndexOf("/"));
-		activationUrl = activationUrl + "/activationstatus/" + token;
-		emailUtil.sendEmail("", "", activationUrl);
-		return userDetailsRepository.save(newUser);
+		sendEmail(request, newUser, "/activationstatus/", "Fundoo Note Verification");
+         return user;
 	}
 
+	
+	private void sendEmail(HttpServletRequest request, UserDetails user, String domainUrl, String message) {
+		String token = tokenGenerator.generateToken(String.valueOf(user.getId()));
+		StringBuffer requestUrl = request.getRequestURL();
+		String activationUrl = requestUrl.substring(0, requestUrl.lastIndexOf("/"));
+		activationUrl += domainUrl + token;
+		emailUtil.sendEmail("", message, activationUrl);
+}
 	@Override
 	public UserDetails activateUser(String token, HttpServletRequest request) {
 		int id = tokenGenerator.verifyToken(token);
@@ -71,17 +71,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	
-	
-//	@Override
-//	public String login(UserDetails user, HttpServletRequest request, HttpServletResponse response) {
-//		UserDetails verifyUser = userDetailsRepository.findAllByEmailId(user.getEmailId());
-//		if (bcryptEncoder.matches(user.getPassword(), verifyUser.getPassword()) && verifyUser.isActivationStatus())
-//		{
-//			String token = tokenGenerator.generateToken(String.valueOf(verifyUser.getId()));
-//			return token;
-//		}
-//		return null;
-//	}
+
 
 	@Override
 	public Optional<UserDetails> getUser(int id) {
@@ -96,17 +86,7 @@ public class UserServiceImpl implements UserService {
 		return optional.map(newUser -> userDetailsRepository.save(newUser.setEmailId(user.getEmailId())
 				.setMobileNumber(user.getMobileNumber()).setName(user.getName()).setPassword(user.getPassword())))
 				.orElseGet(() -> null);
-		// if (optional.isPresent()) {
-		// UserDetails newUser=optional.get();
-		// newUser.setMobileNumber(user.getMobileNumber());
-		// newUser.setName(user.getName());
-		// newUser.setEmailId(user.getEmailId());
-		// newUser.setPassword(user.getPassword());
-		// newUser.setPassword(bcryptEncoder.encode(newUser.getPassword()));
-		// userDetailsRepository.save(newUser);
-		// return newUser;
-		// }
-		// return null;
+		
 	}
 
 	@Override
@@ -122,26 +102,27 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean forgotPassword(String emailId, HttpServletRequest request) {
-		UserDetails user1 = userDetailsRepository.findAllByEmailId(emailId);
+	public boolean forgotPassword(UserDetails user, HttpServletRequest request) {
+		UserDetails user1 = userDetailsRepository.findAllByEmailId(user.getEmailId());
 		if (user1 != null) {
 			String token = tokenGenerator.generateToken(String.valueOf(user1.getId()));
-			StringBuffer requestUrl = request.getRequestURL();
-			String activationUrl = requestUrl.substring(0, requestUrl.lastIndexOf("/"));
-			activationUrl = activationUrl + "/resetpassword/" + token;
-			emailUtil.sendEmail("", "Reset password verification", activationUrl);
+//			StringBuffer requestUrl = request.getRequestURL();
+//			String activationUrl = requestUrl.substring(0, requestUrl.lastIndexOf("/"));
+//			activationUrl = activationUrl + "/resetpassword/" + token;
+			String forgorPasswordUrl="http://localhost:4200/resetpassword/" +token;
+			emailUtil.sendEmail("", "",forgorPasswordUrl);
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public UserDetails resetPassword(UserDetails user, String token, HttpServletRequest request) {
+	public UserDetails resetpassword(UserDetails user, String token, HttpServletRequest request) {
 		int id = tokenGenerator.verifyToken(token);
 		Optional<UserDetails> optional = userDetailsRepository.findById(id);
 		if (optional.isPresent()) {
 			UserDetails user1 = optional.get();
-			user1.setPassword(bcryptEncoder.encode(user1.getPassword()));
+			user1.setPassword(bcryptEncoder.encode(user.getPassword()));
 			userDetailsRepository.save(user1);
 			return user1;
 		}

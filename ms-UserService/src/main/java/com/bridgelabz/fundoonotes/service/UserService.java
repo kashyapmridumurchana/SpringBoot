@@ -23,9 +23,9 @@ public interface UserService {
 	boolean delete(String token,HttpServletRequest request);
 
 
-	boolean forgotPassword(String emailId, HttpServletRequest request);
+	boolean forgotPassword(UserDetails user, HttpServletRequest request);
 
-	UserDetails resetPassword(UserDetails user, String token, HttpServletRequest request);
+	UserDetails resetpassword(UserDetails user, String token, HttpServletRequest request);
 
 	String login(UserDetails user);   
 }

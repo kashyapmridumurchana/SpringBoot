@@ -91,7 +91,7 @@ public class UserController
 				response.setHeader("token", token);
 				return new ResponseEntity<Void>(HttpStatus.OK);
 			} else {
-				return new ResponseEntity<String>("Incorrect emailId or password", HttpStatus.NOT_FOUND);
+				return new ResponseEntity<String>("Incorrect emailId or password", HttpStatus.CONFLICT);
 			}
 		}
 	   
@@ -122,10 +122,9 @@ public class UserController
 		}
 	 
 	 @PostMapping(value = "forgotpassword")
-		public ResponseEntity<?> forgotpassword(@RequestParam("emailId") String emailId, HttpServletRequest request) {
-			if (userService.forgotPassword(emailId, request)) {
-				return new ResponseEntity<String>("Link sent to your emailId reset your password",
-						HttpStatus.OK);
+		public ResponseEntity<?> forgotpassword(@RequestBody UserDetails user, HttpServletRequest request) {
+			if (userService.forgotPassword(user, request)) {
+				return new ResponseEntity<Void>(HttpStatus.OK);
 			} else {
 				return new ResponseEntity<String>("Email incorrect. Please enter valid email address present in database",
 						HttpStatus.NOT_FOUND);
@@ -135,11 +134,11 @@ public class UserController
 		@PutMapping(value = "resetpassword/{token:.+}")
 		public ResponseEntity<?> resetpassword(@RequestBody UserDetails user, @PathVariable("token") String token,
 				HttpServletRequest request) {
-			UserDetails newUser = userService.resetPassword(user, token, request);
+			UserDetails newUser = userService.resetpassword(user, token, request);
 			if (newUser != null) {
-				return new ResponseEntity<String>("Password reset", HttpStatus.OK);
+				return new ResponseEntity<Void>(HttpStatus.OK);
 			} else {
-				return new ResponseEntity<String>("password couldn't be reset", HttpStatus.NOT_FOUND);
+				return new ResponseEntity<String>("password couldn't be reset", HttpStatus.OK);
 			}
 		} 
 	 
