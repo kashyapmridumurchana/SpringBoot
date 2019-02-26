@@ -12,38 +12,29 @@ import com.bridgelabz.fundoonotes.utility.Validation;
 
 @Configuration
 @ComponentScan("com.bridgelabz.fundoonotes")
-public class ApplicationConfiguration 
-{
-	
+public class ApplicationConfiguration {
+
+	@Bean
+	public BCryptPasswordEncoder getPasswordEncoder() {
+		return new BCryptPasswordEncoder();
+
+	}
+
+	@Bean
+	public Validation userValidation() {
+		return new Validation();
+	}
+
+	@SuppressWarnings("deprecation")
 	    @Bean
-	    public BCryptPasswordEncoder getPasswordEncoder() 
-	    {
-	        return new BCryptPasswordEncoder();
-	    
+	    public WebMvcConfigurer corsConfigurer() {
+	        return new WebMvcConfigurerAdapter() {
+	            @Override
+	            public void addCorsMappings(CorsRegistry registry) {
+	                registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE")
+	                        .allowedHeaders("token", "Content-Type").exposedHeaders("token", "Content-Type")
+	                        .allowCredentials(false).maxAge(10000);
+	            }
+	        };
 	    }
-   
-	    @Bean
-	    public Validation userValidation()
-	    {
-	    	return new Validation();
-	    }
-
-	       
-			@SuppressWarnings("deprecation")
-			@Bean
-	        public WebMvcConfigurer corsConfigurer()
-	        {
-	            return new WebMvcConfigurerAdapter() 
-	            {
-	                @Override
-	                public void addCorsMappings(CorsRegistry registry)
-	                {
-	                    registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE").allowedOrigins("*")
-	                            .allowedHeaders("*");
-	                }
-	            };
-	        }
-	    }
-
-
-
+}
