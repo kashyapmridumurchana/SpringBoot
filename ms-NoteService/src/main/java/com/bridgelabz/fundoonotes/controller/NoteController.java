@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,10 +54,10 @@ public class NoteController
 	    
 
 		@PutMapping(value = "updatenote")
-		public ResponseEntity<?> updateNote(@RequestHeader("token") String token, @RequestParam("noteId") int noteId,
+		public ResponseEntity<?> updateNote(@RequestHeader("token") String token,
 				@RequestBody Note note, HttpServletRequest request) {
 
-			Note newNote = noteService.updateNote(token, noteId, note, request);
+			Note newNote = noteService.updateNote(token, note, request);
 			if (newNote != null) {
 				return new ResponseEntity<Note>(newNote, HttpStatus.OK);
 			} else {
@@ -65,8 +66,8 @@ public class NoteController
 			}
 		}
 	
-		@DeleteMapping(value = "deletenote")
-		public ResponseEntity<?> deleteNote(@RequestHeader("token") String token, @RequestParam("noteId") int noteId,
+		@DeleteMapping(value = "deletenote/{noteId:.+}")
+		public ResponseEntity<?> deleteNote(@RequestHeader("token") String token, @PathVariable("noteId")int noteId,
 				HttpServletRequest request) {
 			Note note = noteService.deleteNote(token, noteId, request);
 			if (note != null) {
@@ -88,6 +89,17 @@ public class NoteController
 			}
 		}
 
+		@GetMapping(value = "retrievearchivenote")
+		public ResponseEntity<?> retrieveArchiveNote(@RequestHeader("token") String token, HttpServletRequest request) {
+			List<Note> notes = noteService.retrieveArchiveNotes(token, request);
+			if (!notes.isEmpty()) {
+				return new ResponseEntity<List<Note>>(notes, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String>("Please enter the note id or verify your login",
+						HttpStatus.NOT_FOUND);
+			}
+		}
+		
 		@PostMapping(value = "createlabel")
 		public ResponseEntity<String> createLabel(@RequestHeader("token") String token, @RequestBody Label label,
 				HttpServletRequest request) 

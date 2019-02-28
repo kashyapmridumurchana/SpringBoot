@@ -43,13 +43,13 @@ public class NoteServiceimpl implements NoteService {
 
 	
 	@Override
-    public Note updateNote(String token, int noteId, Note note, HttpServletRequest request) {
+    public Note updateNote(String token, Note note, HttpServletRequest request) {
         Note newNote=null;
         int userId = tokenGenerator.verifyToken(token);
         List<Note> notes= noteRepository.findAllByUserId(userId);
         if(!notes.isEmpty())
         {
-            newNote=notes.stream().filter(existingNote -> existingNote.getNoteId() == noteId).findAny().get();
+            newNote=notes.stream().filter(existingNote -> existingNote.getNoteId() == note.getNoteId()).findAny().get();
             Note updatedNote = newNoteUpdate(newNote, note);
             noteRepository.save(updatedNote);
             return updatedNote;
@@ -93,11 +93,22 @@ public class NoteServiceimpl implements NoteService {
 		int userId = tokenGenerator.verifyToken(token);
 		List<Note> notes = noteRepository.findAllByUserId(userId);
 		if (!notes.isEmpty()) {
+			
 			return notes;
 		}
 		return null;
 	}
 
+	@Override
+	public List<Note> retrieveArchiveNotes(String token, HttpServletRequest request) {
+		
+		 List<Note> notes=noteRepository.findAllArchiveNotes(tokenGenerator.verifyToken(token), true);
+		 
+		 return notes;
+	}
+	
+	
+	
 	@Override
 	public Label createLabel(String token, Label label, HttpServletRequest request)
 	{
@@ -191,7 +202,8 @@ public class NoteServiceimpl implements NoteService {
 		}
 		return false;
 	}
-	
+
+
 	
 	
 	

@@ -14,7 +14,9 @@ public interface NoteService
 
 	List<Note> retrieveNote(String token, HttpServletRequest request);
 	
-	Note updateNote(String token, int noteId, Note note, HttpServletRequest request);
+	List<Note> retrieveArchiveNotes(String token,HttpServletRequest request);
+	
+	Note updateNote(String token, Note note, HttpServletRequest request);
 
 	Note deleteNote(String token, int noteId, HttpServletRequest request);
 	
@@ -32,6 +34,7 @@ public interface NoteService
 
 	boolean removeNoteLabel(String token, int noteId, int labelId, HttpServletRequest request);
 
+	
 	
 	
 }
