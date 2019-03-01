@@ -14,7 +14,6 @@ public interface NoteService
 
 	List<Note> retrieveNote(String token, HttpServletRequest request);
 	
-	List<Note> retrieveArchiveNotes(String token,HttpServletRequest request);
 	
 	Note updateNote(String token, Note note, HttpServletRequest request);
 

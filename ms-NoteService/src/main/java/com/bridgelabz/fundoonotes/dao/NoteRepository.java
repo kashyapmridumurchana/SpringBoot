@@ -14,7 +14,6 @@ public interface NoteRepository extends JpaRepository<Note, Integer> {
 
 	List<Note> findAllByUserId(int userId);
 	
-	List<Note> findAllArchiveNotes(int userId,boolean isArchiveOrNot);
 
 
 }

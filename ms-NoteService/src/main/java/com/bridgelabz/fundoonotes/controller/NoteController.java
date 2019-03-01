@@ -56,7 +56,7 @@ public class NoteController
 		@PutMapping(value = "updatenote")
 		public ResponseEntity<?> updateNote(@RequestHeader("token") String token,
 				@RequestBody Note note, HttpServletRequest request) {
-
+			logger.info("archive "+note.isArchive());
 			Note newNote = noteService.updateNote(token, note, request);
 			if (newNote != null) {
 				return new ResponseEntity<Note>(newNote, HttpStatus.OK);
@@ -89,16 +89,7 @@ public class NoteController
 			}
 		}
 
-		@GetMapping(value = "retrievearchivenote")
-		public ResponseEntity<?> retrieveArchiveNote(@RequestHeader("token") String token, HttpServletRequest request) {
-			List<Note> notes = noteService.retrieveArchiveNotes(token, request);
-			if (!notes.isEmpty()) {
-				return new ResponseEntity<List<Note>>(notes, HttpStatus.OK);
-			} else {
-				return new ResponseEntity<String>("Please enter the note id or verify your login",
-						HttpStatus.NOT_FOUND);
-			}
-		}
+		
 		
 		@PostMapping(value = "createlabel")
 		public ResponseEntity<String> createLabel(@RequestHeader("token") String token, @RequestBody Label label,

@@ -63,11 +63,8 @@ public class NoteServiceimpl implements NoteService {
             newNote.setTitle(note.getTitle());
         if (note.getDescription() != null)
             newNote.setDescription(note.getDescription());
-        if (note.isArchive() != false)
             newNote.setArchive(note.isArchive());
-        if (note.isPinned() != false)
             newNote.setPinned(note.isPinned());
-        if (note.isInTrash() != false)
             newNote.setInTrash(note.isInTrash());
         return newNote;
     }
@@ -99,13 +96,7 @@ public class NoteServiceimpl implements NoteService {
 		return null;
 	}
 
-	@Override
-	public List<Note> retrieveArchiveNotes(String token, HttpServletRequest request) {
-		
-		 List<Note> notes=noteRepository.findAllArchiveNotes(tokenGenerator.verifyToken(token), true);
-		 
-		 return notes;
-	}
+	
 	
 	
 	
