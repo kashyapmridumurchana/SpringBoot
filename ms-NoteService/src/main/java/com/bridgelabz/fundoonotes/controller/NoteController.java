@@ -37,17 +37,17 @@ public class NoteController
 	 
 	 
 	 @PostMapping(value = "createnote")
-		public ResponseEntity<String> createNote(@RequestHeader("token") String token, @RequestBody Note note,
+		public ResponseEntity<Void> createNote(@RequestHeader("token") String token, @RequestBody Note note,
 				HttpServletRequest request)
 	 {
 			
 		     Note note1=noteService.createNote(token, note, request);
 				if (note1!=null) {
-					return new ResponseEntity<String>("Successfully created", HttpStatus.OK);
+					return new ResponseEntity<Void>(HttpStatus.OK);
 			}
 				else
 			{
-				return new ResponseEntity<String>("Cannot create a note", HttpStatus.NOT_FOUND);
+				return new ResponseEntity<Void>( HttpStatus.CONFLICT);
 			}
 		}
 
@@ -106,11 +106,11 @@ public class NoteController
 			}
 		
 		@PutMapping(value = "updatelabel")
-		public ResponseEntity<?> updateUser(@RequestHeader("token") String token, @RequestParam("labelId") int labelId,
+		public ResponseEntity<?> updateUser(@RequestHeader("token") String token,
 				@RequestBody Label label, HttpServletRequest request) {
-			Label newLabel = noteService.updateLabel(token, labelId, label, request);
+			Label newLabel = noteService.updateLabel(token, label, request);
 			if (newLabel != null) {
-				return new ResponseEntity<Label>(newLabel, HttpStatus.FOUND);
+				return new ResponseEntity<Void>( HttpStatus.OK);
 			} else {
 				return new ResponseEntity<String>("User id given is not present or not yet been activated",
 						HttpStatus.NOT_FOUND);
@@ -121,7 +121,7 @@ public class NoteController
 		public ResponseEntity<?> retrieveLabel(@RequestHeader("token") String token, HttpServletRequest request) {
 			List<Label> labels = noteService.retrieveLabel(token, request);
 			if (!labels.isEmpty()) {
-				return new ResponseEntity<List<Label>>(labels, HttpStatus.FOUND);
+				return new ResponseEntity<List<Label>>(labels, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<String>("User id given is not present or not yet been activated",
 						HttpStatus.NOT_FOUND);
@@ -129,13 +129,13 @@ public class NoteController
 		}
 		
 		
-		@DeleteMapping(value = "deletelabel")
-		public ResponseEntity<?> deleteLabel(@RequestHeader("token") String token, @RequestParam("labelId") int labelId,
+		@DeleteMapping(value = "deletelabel/{labelId:.+}")
+		public ResponseEntity<?> deleteLabel(@RequestHeader("token") String token, @PathVariable("labelId") int labelId,
 				HttpServletRequest request) {
 
 			Label label = noteService.deleteLabel(token, labelId, request);
 			if (label != null) {
-				return new ResponseEntity<Label>(label, HttpStatus.FOUND);
+				return new ResponseEntity<Void>(HttpStatus.OK);
 			} else {
 				return new ResponseEntity<String>("User id given is not present or not yet been activated",
 						HttpStatus.NOT_FOUND);

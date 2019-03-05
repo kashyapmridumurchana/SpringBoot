@@ -23,7 +23,7 @@ public interface NoteService
 	//CRUD of label
 	Label createLabel(String token, Label label, HttpServletRequest request);
 	
-	Label updateLabel(String token, int labelId, Label label, HttpServletRequest request);
+	Label updateLabel(String token, Label label, HttpServletRequest request);
 
 	List<Label> retrieveLabel(String token, HttpServletRequest request);
 

@@ -110,9 +110,9 @@ public class NoteServiceimpl implements NoteService {
 	}
 	
 	
-	public Label updateLabel(String token, int labelId, Label label, HttpServletRequest request) {
+	public Label updateLabel(String token, Label label, HttpServletRequest request) {
 		int userId = tokenGenerator.verifyToken(token);
-		Optional<Label> optional = labelRepository.findById(labelId);
+		Optional<Label> optional = labelRepository.findById(label.getLabelId());
 		if (optional.isPresent()) {
 			Label newLabel = optional.get();
 			if (newLabel != null && (newLabel.getUserId()==userId)) {
@@ -144,8 +144,8 @@ public class NoteServiceimpl implements NoteService {
 			Label newLabel =optional.get();
 			if (newLabel != null &&(newLabel.getUserId()==userId)) {
 				labelRepository.delete(newLabel);
+				return newLabel;
 			}
-			return newLabel;
 		}
 		return null;
 	}
