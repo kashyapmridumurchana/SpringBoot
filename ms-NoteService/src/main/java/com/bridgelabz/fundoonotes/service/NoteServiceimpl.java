@@ -34,7 +34,7 @@ public class NoteServiceimpl implements NoteService {
 	private LabelRepository labelRepository;
 
 	@Override
-	public Note createNote(String token, Note note, HttpServletRequest request) {
+	public Note createNote( Note note, String token) {
 		int userId = tokenGenerator.verifyToken(token);
 		note.setUserId(userId);
 		noteRepository.save(note);
@@ -101,7 +101,7 @@ public class NoteServiceimpl implements NoteService {
 	
 	
 	@Override
-	public Label createLabel(String token, Label label, HttpServletRequest request)
+	public Label createLabel(Label label,String token)
 	{
 		int userId = tokenGenerator.verifyToken(token);
 		label.setUserId(userId);
@@ -151,8 +151,8 @@ public class NoteServiceimpl implements NoteService {
 	}
 
 	@Override
-	public boolean addNoteLabel(String token, int noteId, int labelId, HttpServletRequest request) {
-		int userId = tokenGenerator.verifyToken(token);
+	public boolean addNoteLabel( int noteId, int labelId, HttpServletRequest request) {
+		//int userId = tokenGenerator.verifyToken(token);
 		Optional<Label> optional=labelRepository.findById(labelId); 
 		Optional<Note> optional1=noteRepository.findById(noteId); 
 		if (optional.isPresent() && optional1.isPresent()) 
@@ -160,7 +160,7 @@ public class NoteServiceimpl implements NoteService {
 			Note note = optional1.get();
 			Label label = optional.get();
 			
-			if(label.getUserId()==userId && note.getUserId()==userId)
+			if(label!=null && note!=null)
 			{
 			List<Label> labels = note.getLabels();
 			labels.add(label);
@@ -176,8 +176,8 @@ public class NoteServiceimpl implements NoteService {
 	}
 
 	@Override
-	public boolean removeNoteLabel(String token, int noteId, int labelId, HttpServletRequest request) {
-		int userId = tokenGenerator.verifyToken(token);
+	public boolean removeNoteLabel(int noteId, int labelId, HttpServletRequest request) {
+		//int userId = tokenGenerator.verifyToken(token);
 		Optional<Label> optionallabel=labelRepository.findById(labelId); 
 		Optional<Note> optionalnote=noteRepository.findById(noteId); 
 		if (optionallabel.isPresent() && optionalnote.isPresent()) {	
@@ -186,7 +186,7 @@ public class NoteServiceimpl implements NoteService {
 			if (!labels.isEmpty()) {
 				labels = labels.stream().filter(label -> label.getLabelId() != labelId).collect(Collectors.toList());
 				note.setLabels(labels);
-				noteRepository.delete(note);
+				noteRepository.save(note);
 			
 				return true;
 			}
