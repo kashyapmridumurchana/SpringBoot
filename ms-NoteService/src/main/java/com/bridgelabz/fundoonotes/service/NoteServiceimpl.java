@@ -151,9 +151,9 @@ public class NoteServiceimpl implements NoteService {
 	}
 
 	@Override
-	public boolean addNoteLabel( int noteId, int labelId, HttpServletRequest request) {
+	public boolean addNoteLabel( int noteId, Label existingLabel, HttpServletRequest request) {
 		//int userId = tokenGenerator.verifyToken(token);
-		Optional<Label> optional=labelRepository.findById(labelId); 
+		Optional<Label> optional=labelRepository.findById(existingLabel.getLabelId()); 
 		Optional<Note> optional1=noteRepository.findById(noteId); 
 		if (optional.isPresent() && optional1.isPresent()) 
 		{

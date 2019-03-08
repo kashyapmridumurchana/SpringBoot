@@ -123,11 +123,11 @@ public class NoteController {
 		}
 	}
 
-	@PutMapping(value = "addnotelabel")
-	public ResponseEntity<?> addNoteLabel( @RequestParam("noteId") int noteId,
-			@RequestParam("labelId") int labelId, HttpServletRequest request) {
-		if (noteService.addNoteLabel( noteId, labelId, request)) {
-			return new ResponseEntity<String>("Successfully mapped", HttpStatus.OK);
+	@PutMapping(value = "addnotelabel/{noteId:.+}")
+	public ResponseEntity<?> addNoteLabel( @PathVariable("noteId") int noteId,
+			@RequestBody Label label, HttpServletRequest request) {
+		if (noteService.addNoteLabel( noteId, label, request)) {
+			return new ResponseEntity<Void>(HttpStatus.OK);
 		} else {
 			return new ResponseEntity<String>("User id given is not present or not yet been activated",
 					HttpStatus.NOT_FOUND);
@@ -138,7 +138,7 @@ public class NoteController {
 	public ResponseEntity<?> removeNoteLabel( @RequestParam("noteId") int noteId,
 			@RequestParam("labelId") int labelId, HttpServletRequest request) {
 		if (noteService.removeNoteLabel( noteId, labelId, request)) {
-			return new ResponseEntity<String>("Successfully mapped", HttpStatus.OK);
+			return new ResponseEntity<Void>(HttpStatus.OK);
 		} else {
 			return new ResponseEntity<String>("User id given is not present or not yet been activated",
 					HttpStatus.NOT_FOUND);
