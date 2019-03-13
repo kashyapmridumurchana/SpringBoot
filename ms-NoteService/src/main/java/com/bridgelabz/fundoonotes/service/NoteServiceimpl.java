@@ -99,7 +99,6 @@ public class NoteServiceimpl implements NoteService {
 	
 	
 	
-	
 	@Override
 	public Label createLabel(Label label,String token)
 	{
@@ -176,7 +175,6 @@ public class NoteServiceimpl implements NoteService {
 
 	@Override
 	public boolean removeNoteLabel(int noteId, int labelId, HttpServletRequest request) {
-		//int userId = tokenGenerator.verifyToken(token);
 		Optional<Label> optionallabel=labelRepository.findById(labelId); 
 		Optional<Note> optionalnote=noteRepository.findById(noteId); 
 		if (optionallabel.isPresent() && optionalnote.isPresent()) {	

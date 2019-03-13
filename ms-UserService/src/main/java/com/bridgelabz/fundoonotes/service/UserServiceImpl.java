@@ -129,4 +129,16 @@ public class UserServiceImpl implements UserService {
 		return null;
 	}
 
+
+	@Override
+	public UserDetails collaborator(String token, HttpServletRequest request) {
+		int id = tokenGenerator.verifyToken(token);
+		Optional<UserDetails> optional = userDetailsRepository.findById(id);
+		if (optional.isPresent()) {
+			UserDetails user1 = optional.get();
+			return user1;
+		}
+		return null;
+	}
+
 }

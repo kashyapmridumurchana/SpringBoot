@@ -27,5 +27,7 @@ public interface UserService {
 
 	UserDetails resetpassword(UserDetails user, String token, HttpServletRequest request);
 
-	String login(UserDetails user);   
+	String login(UserDetails user);
+
+	UserDetails collaborator(String token, HttpServletRequest request);   
 }

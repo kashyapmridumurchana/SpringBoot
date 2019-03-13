@@ -141,6 +141,16 @@ public class UserController
 				return new ResponseEntity<String>("password couldn't be reset", HttpStatus.OK);
 			}
 		} 
-	 
+	
+	@GetMapping(value="userdetails")
+	public ResponseEntity<?> collaborator(@RequestHeader("token") String token,
+			HttpServletRequest request) {
+		UserDetails newUser = userService.collaborator(token, request);
+		if (newUser != null) {
+			return new ResponseEntity<UserDetails>(newUser,HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Void>( HttpStatus.NOT_FOUND);
+		}
+	} 	
 }  
 
