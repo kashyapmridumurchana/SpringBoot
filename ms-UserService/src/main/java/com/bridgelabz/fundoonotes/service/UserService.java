@@ -5,6 +5,8 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.bridgelabz.fundoonotes.model.UserDetails;
 
 public interface UserService {
@@ -29,5 +31,9 @@ public interface UserService {
 
 	String login(UserDetails user);
 
-	UserDetails collaborator(String token, HttpServletRequest request);   
+	UserDetails collaborator(String token, HttpServletRequest request);
+
+	UserDetails imageSaving(String token, MultipartFile file);
+
+	UserDetails deleteImage(String token, HttpServletRequest request);   
 }

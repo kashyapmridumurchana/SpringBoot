@@ -3,6 +3,7 @@ import javax.persistence.Entity;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 
 @Entity
 public class UserDetails
@@ -16,6 +17,18 @@ public class UserDetails
 
 	@Column(name = "name")
 	private String name;
+	
+	
+	@Lob
+	private byte[] image;
+
+	public byte[] getImage() {
+		return image;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
 
 	@Column(name = "emailId", unique = true)
 	private String emailId;

@@ -24,8 +24,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.bridgelabz.fundoonotes.model.UserDetails;
 import com.bridgelabz.fundoonotes.service.UserService;
+import com.google.common.collect.MultimapBuilder.MultimapBuilderWithKeys;
 
 
 @Controller
@@ -141,6 +144,29 @@ public class UserController
 				return new ResponseEntity<String>("password couldn't be reset", HttpStatus.OK);
 			}
 		} 
+		
+		@PutMapping(value = "imageUpload/{token:.+}")
+		public ResponseEntity<?> uploadImage(@PathVariable("token") String token,
+				@RequestParam MultipartFile file) {
+			UserDetails newUser = userService.imageSaving(token,file);
+			if (newUser != null) {
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String>("photo couldnot be uploaded", HttpStatus.OK);
+			}
+		} 
+		
+		@DeleteMapping(value = "imagedelete/{token:.+}")
+		 public ResponseEntity<?> deleteImage(@PathVariable("token") String token, HttpServletRequest request) {
+     UserDetails user=userService.deleteImage(token, request);
+				if (user!=null) {
+					return new ResponseEntity<UserDetails>(HttpStatus.OK);
+				} else {
+					return new ResponseEntity<String>("error in deleting image",
+							HttpStatus.NOT_FOUND);
+				}
+			}
+		
 	
 	@GetMapping(value="userdetails")
 	public ResponseEntity<?> collaborator(@RequestHeader("token") String token,

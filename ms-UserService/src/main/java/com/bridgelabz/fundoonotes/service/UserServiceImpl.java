@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoonotes.service;
 
+import java.io.IOException;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -7,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.bridgelabz.fundoonotes.model.UserDetails;
 import com.bridgelabz.fundoonotes.utility.EmailUtil;
 import com.bridgelabz.fundoonotes.utility.TokenGenerator;
@@ -141,4 +144,48 @@ public class UserServiceImpl implements UserService {
 		return null;
 	}
 
+
+	@Override
+	public UserDetails imageSaving(String token, MultipartFile file) {
+		int id = tokenGenerator.verifyToken(token);
+		UserDetails user2=null;
+        Optional<UserDetails> user=userDetailsRepository.findById(id);
+        System.out.println(user);
+        if(user.isPresent())
+        {
+        	try 
+        	{
+        	byte[] image;
+			
+				image = file.getBytes();
+				user2=user.get();
+	        	user2.setImage(image);
+	        	userDetailsRepository.save(user2);
+			} 
+        	catch (IOException e)
+        	{
+				e.printStackTrace();
+			}
+        	
+        }
+		return user2;
+	}
+
+
+	@Override
+	public UserDetails deleteImage(String token, HttpServletRequest request) {
+		int id = tokenGenerator.verifyToken(token);
+		UserDetails newUser=null;
+		Optional<UserDetails> user=userDetailsRepository.findById(id);
+		if(user.isPresent())
+		{
+		newUser=user.get();
+		newUser.setImage(null);
+		userDetailsRepository.save(newUser);
+		}
+				return newUser;
+	}
+
+	
+	
 }
