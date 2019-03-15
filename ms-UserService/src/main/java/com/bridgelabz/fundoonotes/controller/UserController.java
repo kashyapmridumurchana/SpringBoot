@@ -1,5 +1,7 @@
 package com.bridgelabz.fundoonotes.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -178,5 +180,16 @@ public class UserController
 			return new ResponseEntity<Void>( HttpStatus.NOT_FOUND);
 		}
 	} 	
+	
+	@GetMapping(value="allUserDetails")
+	public ResponseEntity<?> getAllUsers(HttpServletRequest request) {
+		List<UserDetails> users = userService.getAllUsers( request);
+		if (users != null) {
+			return new ResponseEntity<List<UserDetails>>(users, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Void>( HttpStatus.NOT_FOUND);
+		}
+	} 	
+	
 }  
 

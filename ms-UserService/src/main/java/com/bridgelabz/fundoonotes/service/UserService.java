@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoonotes.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,5 +36,7 @@ public interface UserService {
 
 	UserDetails imageSaving(String token, MultipartFile file);
 
-	UserDetails deleteImage(String token, HttpServletRequest request);   
+	UserDetails deleteImage(String token, HttpServletRequest request);
+
+	List<UserDetails> getAllUsers(HttpServletRequest request);   
 }

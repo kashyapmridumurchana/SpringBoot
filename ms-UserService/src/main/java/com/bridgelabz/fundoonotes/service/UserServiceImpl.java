@@ -1,6 +1,7 @@
 package com.bridgelabz.fundoonotes.service;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -184,6 +185,12 @@ public class UserServiceImpl implements UserService {
 		userDetailsRepository.save(newUser);
 		}
 				return newUser;
+	}
+
+
+	@Override
+	public List<UserDetails> getAllUsers(HttpServletRequest request) {
+		return userDetailsRepository.findAll();
 	}
 
 	
