@@ -13,11 +13,11 @@ import com.bridgelabz.fundoonotes.model.UserDetails;
 public interface UserDetailsRepository extends JpaRepository<UserDetails, Integer> {
 
 	UserDetails findAllByEmailId(String emailId);
-//
+
 //	@Query(value = "SELECT user FROM mydb")
 //	List<UserDetails> findAllUsers();
 
-
+	//List<UserDetails> findAllByEmailIds(String emailId);
 
 	
 }

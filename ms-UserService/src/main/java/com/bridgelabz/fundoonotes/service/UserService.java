@@ -38,5 +38,7 @@ public interface UserService {
 
 	UserDetails deleteImage(String token, HttpServletRequest request);
 
-	List<UserDetails> getAllUsers(HttpServletRequest request);   
+	List<UserDetails> getAllUsers(HttpServletRequest request);
+
+	UserDetails verifyEmail(String token, String email, HttpServletRequest request);   
 }

@@ -33,6 +33,8 @@ public interface NoteService
 
 	boolean removeNoteLabel(int noteId, int labelId, HttpServletRequest request);
 
+	boolean createCollaborator(String token, int noteId, int userId);
+
 	
 	
 	

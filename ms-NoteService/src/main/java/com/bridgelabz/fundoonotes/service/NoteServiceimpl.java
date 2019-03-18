@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bridgelabz.fundoonotes.controller.NoteController;
+import com.bridgelabz.fundoonotes.dao.CollaboratorRepository;
 import com.bridgelabz.fundoonotes.dao.LabelRepository;
 import com.bridgelabz.fundoonotes.dao.NoteRepository;
+import com.bridgelabz.fundoonotes.model.Collaborator;
 import com.bridgelabz.fundoonotes.model.Label;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.utility.TokenGenerator;
@@ -33,6 +35,9 @@ public class NoteServiceimpl implements NoteService {
 	@Autowired
 	private LabelRepository labelRepository;
 
+	@Autowired
+	private CollaboratorRepository collaboratorRepository;
+	
 	@Override
 	public Note createNote( Note note, String token) {
 		int userId = tokenGenerator.verifyToken(token);
@@ -66,6 +71,7 @@ public class NoteServiceimpl implements NoteService {
             newNote.setArchive(note.isArchive());
             newNote.setPinned(note.isPinned());
             newNote.setInTrash(note.isInTrash());
+            newNote.setColor(note.getColor());
         return newNote;
     }
 	
@@ -191,7 +197,14 @@ public class NoteServiceimpl implements NoteService {
 		return false;
 	}
 
-
+	@Override
+	public boolean createCollaborator(String token, int noteId, int userId) {
+		Collaborator collaborator = new Collaborator();
+		collaborator = collaboratorRepository.save(collaborator.setNoteId(noteId).setUserId(userId));
+		if (collaborator != null)
+			return true;
+		return false;
+}
 	
 	
 	

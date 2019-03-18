@@ -191,6 +191,20 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<UserDetails> getAllUsers(HttpServletRequest request) {
 		return userDetailsRepository.findAll();
+	
+	}
+
+
+	@Override
+	public UserDetails verifyEmail(String token, String email, HttpServletRequest request) {
+		UserDetails user = userDetailsRepository.findById(tokenGenerator.verifyToken(token)).get();
+		//List<UserDetails> users = userDetailsRepository.findAllByEmailIds(email);
+		List<UserDetails> users = userDetailsRepository.findAll();
+		if (users.size() == 1) {
+			UserDetails newUser = users.get(0);
+			return newUser;
+		}
+     return null;
 	}
 
 	

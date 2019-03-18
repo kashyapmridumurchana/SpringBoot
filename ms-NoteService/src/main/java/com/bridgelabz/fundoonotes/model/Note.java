@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -58,8 +59,31 @@ public class Note implements Serializable {
 	@Column(name = "userId")
 	private int userId;
 
+	@Column(name = "color")
+	private String color;
 	
-	 @ManyToMany(fetch = FetchType.EAGER, targetEntity = Label.class, cascade = {
+    @OneToMany(mappedBy = "noteId")
+    private List<Collaborator> collaborators;
+ 
+    
+
+	 public List<Collaborator> getCollaborators() {
+		return collaborators;
+	}
+
+	public void setCollaborators(List<Collaborator> collaborators) {
+		this.collaborators = collaborators;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Label.class, cascade = {
 	 CascadeType.ALL })
 	 @JoinTable(name = "Note_Label", joinColumns = { @JoinColumn(name = "noteId")
 	 }, inverseJoinColumns = {
