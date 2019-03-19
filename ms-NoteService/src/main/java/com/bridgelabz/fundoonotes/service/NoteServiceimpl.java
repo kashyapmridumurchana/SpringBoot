@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoonotes.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -94,12 +95,17 @@ public class NoteServiceimpl implements NoteService {
 	@Override
 	public List<Note> retrieveNote(String token, HttpServletRequest request) {
 		int userId = tokenGenerator.verifyToken(token);
+		List<Note> collabNotes = new ArrayList<>();
+		List<Collaborator> collaborators = collaboratorRepository.findAllByUserId(userId);
+		for (Collaborator collaborator : collaborators) {
+			collabNotes.add(noteRepository.findById(collaborator.getNoteId()).get());
+		}
 		List<Note> notes = noteRepository.findAllByUserId(userId);
+		notes.addAll(collabNotes);
 		if (!notes.isEmpty()) {
-			
 			return notes;
 		}
-		return null;
+return null;
 	}
 
 	
@@ -205,6 +211,16 @@ public class NoteServiceimpl implements NoteService {
 			return true;
 		return false;
 }
+
+
+	@Override
+	public boolean deleteCollaborator(int noteId, int userId) {
+		Collaborator collaborator = collaboratorRepository.findByNoteIdAndUserId(noteId, userId).get();
+		if (collaborator != null) {
+			collaboratorRepository.delete(collaborator);
+			return true;}
+		return false;
+	}
 	
 	
 	

@@ -197,6 +197,14 @@ public class UserController
 			return new ResponseEntity<UserDetails>(newUser,HttpStatus.OK);
 		return new ResponseEntity<String>("user not found", HttpStatus.NOT_FOUND);
 }
+	@GetMapping(value="getcollaborateduser/{userId}")
+	public ResponseEntity<?> getCollaboratedUser(@PathVariable("userId") int userId){
+		UserDetails user=userService.getCollaboratedUser(userId);
+		if(user!=null)
+			return new ResponseEntity<UserDetails>(user,HttpStatus.OK);
+			return new ResponseEntity<String>("error in fetching collaborated users",HttpStatus.NOT_FOUND);
+			
+	}
 	
 }  
 

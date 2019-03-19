@@ -35,6 +35,8 @@ public interface NoteService
 
 	boolean createCollaborator(String token, int noteId, int userId);
 
+	boolean deleteCollaborator( int noteId, int userId);
+
 	
 	
 	

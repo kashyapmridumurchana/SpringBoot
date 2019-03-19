@@ -40,5 +40,7 @@ public interface UserService {
 
 	List<UserDetails> getAllUsers(HttpServletRequest request);
 
-	UserDetails verifyEmail(String token, String email, HttpServletRequest request);   
+	UserDetails verifyEmail(String token, String email, HttpServletRequest request);
+
+	UserDetails getCollaboratedUser(int userId);   
 }

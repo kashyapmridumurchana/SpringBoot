@@ -152,5 +152,12 @@ public class NoteController {
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		return new ResponseEntity<String>("There was a issue raised cannot create a collaborator", HttpStatus.CONFLICT);
 }
-
+	
+	@DeleteMapping(value = "deletecollaborator/{noteId}/{userId}")
+	public ResponseEntity<?> deleteCollaborator(@PathVariable("noteId") int noteId,
+			@PathVariable("userId") int userId,HttpServletRequest request) {
+		if (noteService.deleteCollaborator(noteId, userId))
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<String>("There was a issue raised cannot delete a collaborator", HttpStatus.CONFLICT);
+}
 }
