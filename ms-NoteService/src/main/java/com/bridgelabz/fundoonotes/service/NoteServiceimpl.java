@@ -18,6 +18,7 @@ import com.bridgelabz.fundoonotes.dao.NoteRepository;
 import com.bridgelabz.fundoonotes.model.Collaborator;
 import com.bridgelabz.fundoonotes.model.Label;
 import com.bridgelabz.fundoonotes.model.Note;
+import com.bridgelabz.fundoonotes.utility.EmailUtil;
 import com.bridgelabz.fundoonotes.utility.TokenGenerator;
 
 @Service
@@ -38,6 +39,9 @@ public class NoteServiceimpl implements NoteService {
 
 	@Autowired
 	private CollaboratorRepository collaboratorRepository;
+	
+	@Autowired
+	private EmailUtil emailUtility;
 	
 	@Override
 	public Note createNote( Note note, String token) {
@@ -207,8 +211,11 @@ return null;
 	public boolean createCollaborator(String token, int noteId, int userId) {
 		Collaborator collaborator = new Collaborator();
 		collaborator = collaboratorRepository.save(collaborator.setNoteId(noteId).setUserId(userId));
-		if (collaborator != null)
+		if (collaborator != null) 
+		{
+			emailUtility.sendEmail("","Note has been shared ","");
 			return true;
+			}
 		return false;
 }
 

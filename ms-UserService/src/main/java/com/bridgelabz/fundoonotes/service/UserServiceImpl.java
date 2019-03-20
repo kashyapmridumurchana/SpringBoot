@@ -110,9 +110,6 @@ public class UserServiceImpl implements UserService {
 		UserDetails user1 = userDetailsRepository.findAllByEmailId(user.getEmailId());
 		if (user1 != null) {
 			String token = tokenGenerator.generateToken(String.valueOf(user1.getId()));
-//			StringBuffer requestUrl = request.getRequestURL();
-//			String activationUrl = requestUrl.substring(0, requestUrl.lastIndexOf("/"));
-//			activationUrl = activationUrl + "/resetpassword/" + token;
 			String forgorPasswordUrl="http://localhost:4200/resetpassword/" +token;
 			emailUtil.sendEmail("", "",forgorPasswordUrl);
 			return true;
