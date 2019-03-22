@@ -77,6 +77,7 @@ public class NoteServiceimpl implements NoteService {
             newNote.setPinned(note.isPinned());
             newNote.setInTrash(note.isInTrash());
             newNote.setColor(note.getColor());
+            newNote.setReminder(note.getReminder());
         return newNote;
     }
 	

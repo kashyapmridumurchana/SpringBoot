@@ -23,6 +23,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @SuppressWarnings("serial")
 @Entity
 public class Note implements Serializable {
@@ -65,9 +67,19 @@ public class Note implements Serializable {
     @OneToMany(mappedBy = "noteId")
     private List<Collaborator> collaborators;
  
-    
+    @Column(name = "reminder")
+	@JsonFormat
+    private Timestamp reminder;
 
-	 public List<Collaborator> getCollaborators() {
+	 public Timestamp getReminder() {
+		return reminder;
+	}
+
+	public void setReminder(Timestamp reminder) {
+		this.reminder = reminder;
+	}
+
+	public List<Collaborator> getCollaborators() {
 		return collaborators;
 	}
 
@@ -78,7 +90,7 @@ public class Note implements Serializable {
 	public String getColor() {
 		return color;
 	}
-
+	
 	public void setColor(String color) {
 		this.color = color;
 	}
@@ -185,7 +197,10 @@ public class Note implements Serializable {
 	public String toString() {
 		return "Note [noteId=" + noteId + ", title=" + title + ", description=" + description + ", createdTime="
 				+ createdTime + ", updatedTime=" + updatedTime + ", isArchive=" + isArchive + ", isPinned=" + isPinned
-				+ ", inTrash=" + inTrash + ", userId=" + userId + "]";
+				+ ", inTrash=" + inTrash + ", userId=" + userId + ", color=" + color + ", collaborators="
+				+ collaborators + ", reminder=" + reminder + ", labels=" + labels + "]";
 	}
+
+	
 
 }
