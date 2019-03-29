@@ -70,8 +70,19 @@ public class Note implements Serializable {
     @Column(name = "reminder")
 	@JsonFormat
     private Timestamp reminder;
+    
+    @OneToMany(mappedBy ="noteId")
+    private List<Images> images;
 
-	 public Timestamp getReminder() {
+	 public List<Images> getImages() {
+		return images;
+	}
+
+	public void setImages(List<Images> images) {
+		this.images = images;
+	}
+
+	public Timestamp getReminder() {
 		return reminder;
 	}
 

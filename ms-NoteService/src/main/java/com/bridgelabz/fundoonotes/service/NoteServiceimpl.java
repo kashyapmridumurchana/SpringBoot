@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoonotes.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,12 +11,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.MultipartFilter;
 
 import com.bridgelabz.fundoonotes.controller.NoteController;
 import com.bridgelabz.fundoonotes.dao.CollaboratorRepository;
+import com.bridgelabz.fundoonotes.dao.ImagesRepository;
 import com.bridgelabz.fundoonotes.dao.LabelRepository;
 import com.bridgelabz.fundoonotes.dao.NoteRepository;
 import com.bridgelabz.fundoonotes.model.Collaborator;
+import com.bridgelabz.fundoonotes.model.Images;
 import com.bridgelabz.fundoonotes.model.Label;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.utility.EmailUtil;
@@ -42,6 +47,10 @@ public class NoteServiceimpl implements NoteService {
 	
 	@Autowired
 	private EmailUtil emailUtility;
+	
+	@Autowired
+	private ImagesRepository imagesRepository;
+	
 	
 	@Override
 	public Note createNote( Note note, String token) {
@@ -229,6 +238,36 @@ return null;
 			return true;}
 		return false;
 	}
+
+
+	@Override
+	public boolean storeFile(MultipartFile file, int noteId) throws IOException {
+		Note note = noteRepository.findById(noteId).get();
+		if (note != null) {
+			Images image = new Images();
+			image.setImages(file.getBytes()).setNoteId(noteId);
+			imagesRepository.save(image);
+			return true;
+		}
+		return false;
+}
+
+
+	@Override
+	public Note getFile(String token, int noteId) {
+		return noteRepository.findById(noteId).get();
+	}
+
+
+	@Override
+	public boolean deleteFile(int imagesId) {
+		Images image = imagesRepository.findById(imagesId).get();
+		if (image!=null) {
+			imagesRepository.delete(image);
+			return true;
+		}
+		return false;
+}
 	
 	
 	
